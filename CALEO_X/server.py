@@ -1,0 +1,37 @@
+from flask import Flask, request, jsonify
+from threading import Thread
+import json
+from brain.Manager import Manager
+
+app = Flask(__name__)
+
+mgr = Manager()
+
+
+@app.route("/")
+def root():
+    return "CALEO: saving your online time since 2019"
+
+
+@app.route("/heatmap", methods=['POST'])
+def update_heatmap():
+    params = request.form
+    new_data = params['data']
+    video_id = params['videoId']
+    result = mgr.updateHeatmap(video_id, json.loads(new_data))
+    return result
+
+
+@app.route("/video/<video_id>", methods=['GET','POST'])
+def get_video(video_id):
+    video = mgr.findVideo(video_id)
+    if video is not None:
+        return jsonify(video)
+    else:
+        fetch_thread = Thread(target=mgr.analyze, kwargs={'id': video_id})
+        fetch_thread.start()
+        return "nope"
+
+
+if __name__ == "__main__":
+    app.run(host='0.0.0.0')

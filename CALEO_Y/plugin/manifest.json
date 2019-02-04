@@ -1,0 +1,25 @@
+{
+  "name": "CALEO",
+  "version": "2.0",
+  "description": "Save time on Youtube",
+  "browser_action": {
+      "default_title": "CALEO",
+      "default_icon": "icon.png",
+      "default_popup": "popup.html"
+  },
+  "permissions": [
+        "webNavigation",
+        "tabs",
+        "activeTab",
+        "storage"
+  ],
+  "content_scripts": [{
+    "matches": ["<all_urls>"],
+    "js": ["content.js"]
+  }],
+  "background": {
+    "scripts": ["jquery-3.1.1.min.js", "background.js"],
+    "persistent": false
+  },
+  "manifest_version": 2
+}
